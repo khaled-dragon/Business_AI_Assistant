@@ -56,7 +56,10 @@ async function sendMessage() {
     try {
         const response = await fetch(`${API_URL}/chat`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json' 
+            },
             body: JSON.stringify({ question: message })
         });
         
@@ -66,6 +69,7 @@ async function sendMessage() {
     } catch (error) {
         removeLoadingBubble(loadingId);
         appendMessage("AI", "Sorry, something went wrong. Check your connection.");
+        console.error("Chat Error:", error); // ضيف دي عشان تشوف التفاصيل في الـ Console لو باظت
     }
 }
 
@@ -145,3 +149,4 @@ function handleKeyPress(e) {
 function clearChat() {
     chatBox.innerHTML = '';
 }
+
