@@ -63,9 +63,10 @@ async function sendMessage() {
             body: JSON.stringify({ question: message })
         });
         
-        const data = await response.json();
-        removeLoadingBubble(loadingId);
-        appendMessage("AI", data.response);
+const data = await response.json();
+removeLoadingBubble(loadingId);
+const aiResponse = data.answer || data.response || data.summary || "No response received";
+appendMessage("AI", aiResponse);
     } catch (error) {
         removeLoadingBubble(loadingId);
         appendMessage("AI", "Sorry, something went wrong. Check your connection.");
@@ -149,3 +150,4 @@ function handleKeyPress(e) {
 function clearChat() {
     chatBox.innerHTML = '';
 }
+
