@@ -14,6 +14,9 @@
         .typing-dot:nth-child(1) { animation-delay: -0.32s; }
         .typing-dot:nth-child(2) { animation-delay: -0.16s; }
         @keyframes typing { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+        
+        /* تحسينات إضافية للـ Toggle ليظهر بشكل احترافي */
+        .mode-container { transition: all 0.3s ease; }
     </style>
 </head>
 <body class="bg-gray-50 text-slate-800 font-sans h-screen flex overflow-hidden">
@@ -84,6 +87,9 @@
         </div>
 
         <div class="p-6 bg-white border-t border-gray-100">
+            
+            <div id="toggle-container" class="mb-4"></div>
+
             <div class="relative flex items-center bg-gray-100 rounded-xl px-4 py-3 focus-within:ring-2 focus-within:ring-blue-100 transition border border-transparent focus-within:border-blue-200">
                 <input type="text" id="user-input" placeholder="Type your business inquiry..." 
                     class="flex-1 bg-transparent border-none outline-none text-slate-700 placeholder-gray-400 text-sm"
