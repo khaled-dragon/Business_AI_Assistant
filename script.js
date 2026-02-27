@@ -85,13 +85,13 @@ async function sendMessage() {
     }
 }
 
-
 async function getSummary() {
-    if (fileInput.files.length === 0) return alert("Please select PDF files first.");
+    const fInput = document.getElementById('file-upload');
+    if (fInput.files.length === 0) return alert("Please select PDF files first.");
     
     toggleLoading(true);
     const formData = new FormData();
-    for (const file of fileInput.files) {
+    for (const file of fInput.files) {
         formData.append("files", file);
     }
 
@@ -121,7 +121,7 @@ function appendMessage(sender, text) {
     const isUser = sender === "User";
     const isSystem = sender === "System";
     const div = document.createElement('div');
-    div.className = `flex items-start gap-4 ${isUser ? 'flex-row-reverse' : ''} mb-6`;
+    div.className = `flex items-start gap-4 ${isUser ? 'flex-row-reverse' : ''} mb-6 animate-fade-in`;
     
     const formattedText = text.replace(/\n/g, '<br>');
 
