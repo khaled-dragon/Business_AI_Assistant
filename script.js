@@ -1,12 +1,24 @@
 const API_URL = "https://khaled135-business-ai-assistant.hf.space";
-
 const fileInput = document.getElementById('file-upload');
 const fileCount = document.getElementById('file-count');
 const chatBox = document.getElementById('chat-box');
 const userInput = document.getElementById('user-input');
 const loadingModal = document.getElementById('loading-modal');
+const toggleContainer = document.getElementById('toggle-container');
 
-let chatHistory = []; 
+let chatHistory = [];
+
+async function loadToggleButton() {
+    try {
+        const response = await fetch('button.html');
+        const html = await response.text();
+        toggleContainer.innerHTML = html;
+    } catch (error) {
+        console.error("Error loading toggle button:", error);
+    }
+}
+
+window.addEventListener('DOMContentLoaded', loadToggleButton);
 
 fileInput.addEventListener('change', () => {
     const count = fileInput.files.length;
@@ -20,7 +32,7 @@ function toggleLoading(show) {
 
 function clearChat() {
     chatBox.innerHTML = '';
-    chatHistory = []; 
+    chatHistory = [];
     appendMessage("System", "Chat history cleared.");
 }
 
@@ -40,7 +52,7 @@ async function processFiles() {
         });
         if (response.ok) {
             alert("Documents successfully indexed!");
-            appendMessage("System", "Documents processed. You can now ask questions about them.");
+            appendMessage("System", "Documents processed. You can now switch to 'Document RAG' mode to ask about them.");
             chatHistory = []; 
         } else {
             alert("Error processing files.");
@@ -56,6 +68,10 @@ async function sendMessage() {
     const message = userInput.value.trim();
     if (!message) return;
 
+    const modeToggle = document.getElementById('mode-toggle');
+    const isRAG = modeToggle ? modeToggle.checked : false;
+    const currentMode = isRAG ? 'rag' : 'llm';
+
     appendMessage("User", message);
     userInput.value = "";
     
@@ -67,7 +83,8 @@ async function sendMessage() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
                 question: message,
-                chat_history: chatHistory 
+                chat_history: chatHistory,
+                mode: currentMode
             })
         });
         
@@ -76,8 +93,8 @@ async function sendMessage() {
         
         appendMessage("AI", data.response);
 
-        chatHistory.push({ role: "user", content: message });
-        chatHistory.push({ role: "assistant", content: data.response });
+        chatHistory.push(["human", message]);
+        chatHistory.push(["ai", data.response]);
 
     } catch (error) {
         removeLoadingBubble(loadingId);
@@ -120,6 +137,7 @@ function handleKeyPress(event) {
 function appendMessage(sender, text) {
     const isUser = sender === "User";
     const isSystem = sender === "System";
+    const isSummary = sender === "AI Summary";
     const div = document.createElement('div');
     div.className = `flex items-start gap-4 ${isUser ? 'flex-row-reverse' : ''} mb-6 animate-fade-in`;
     
@@ -130,7 +148,7 @@ function appendMessage(sender, text) {
             <i class="fa-solid ${isUser ? 'fa-user' : (isSystem ? 'fa-triangle-exclamation' : 'fa-robot')}"></i>
         </div>
         <div class="${isUser ? 'bg-blue-600 text-white' : 'bg-white border border-gray-100 text-slate-700'} p-4 rounded-2xl ${isUser ? 'rounded-tr-none' : 'rounded-tl-none'} shadow-sm max-w-[80%] text-sm">
-            ${formattedText}
+            ${isSummary ? '<strong>Summary Result:</strong><br>' : ''}${formattedText}
         </div>
     `;
     chatBox.appendChild(div);
