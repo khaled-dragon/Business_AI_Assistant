@@ -10,11 +10,20 @@ let chatHistory = [];
 
 async function loadToggleButton() {
     try {
-        const response = await fetch('button.html');
+        const response = await fetch('./frontend/button.html'); 
+        if (!response.ok) throw new Error("File not found");
         const html = await response.text();
         toggleContainer.innerHTML = html;
+        
+        console.log("Toggle Button Loaded Successfully");
     } catch (error) {
         console.error("Error loading toggle button:", error);
+        toggleContainer.innerHTML = `
+            <div class="flex items-center justify-center gap-4 py-3 bg-gray-50 rounded-xl border my-4">
+                <span class="text-xs">General AI</span>
+                <input type="checkbox" id="mode-toggle">
+                <span class="text-xs">RAG Mode</span>
+            </div>`;
     }
 }
 
@@ -170,3 +179,4 @@ function removeLoadingBubble(id) {
     const bubble = document.getElementById(id);
     if (bubble) bubble.remove();
 }
+
