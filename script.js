@@ -10,7 +10,7 @@ let chatHistory = [];
 
 async function loadToggleButton() {
     try {
-        const response = await fetch('./frontend/button.html'); 
+        const response = await fetch('frontend/button.html'); 
         if (!response.ok) throw new Error("File not found");
         const html = await response.text();
         toggleContainer.innerHTML = html;
@@ -179,4 +179,5 @@ function removeLoadingBubble(id) {
     const bubble = document.getElementById(id);
     if (bubble) bubble.remove();
 }
+
 
